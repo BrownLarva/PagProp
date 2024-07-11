@@ -1,0 +1,11 @@
+package components
+
+import "PagProp/models"
+
+templ ListaPropiedades(propiedades []models.Propiedad) {
+	<ul id="listaPropiedades" class="grid grid-cols-3 gap-4 justify-items-center">
+		for _, propiedad := range propiedades {
+			@PropiedadCard(&propiedad)
+		}
+	</ul>
+}

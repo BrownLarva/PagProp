@@ -1,0 +1,13 @@
+package home
+
+import (
+	"PagProp/views/components"
+	"PagProp/views/layouts"
+	"PagProp/models"
+)
+
+templ Home(propiedades []models.Propiedad) {
+	@layouts.Base() {
+		@components.ListaPropiedades(propiedades)
+	}
+}

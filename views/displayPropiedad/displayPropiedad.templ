@@ -1,0 +1,61 @@
+package displayPropiedad
+
+import (
+	"PagProp/views/layouts"
+	"PagProp/models"
+	"fmt"
+)
+
+templ DisplayPropiedad(propiedad *models.Propiedad) {
+	@layouts.Base() {
+		<div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+			<h1 class="text-3xl font-bold text-red-900 mb-6">{ propiedad.Categoria } en { propiedad.Comuna }</h1>
+			<div class="mb-8">
+				if len(propiedad.FotosLinks) > 0 {
+					<img src={ propiedad.FotosLinks[0] } alt="Imagen principal" class="w-full h-96 object-cover rounded-lg shadow-md"/>
+				}
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+				<div>
+					<h2 class="text-2xl font-semibold text-red-800 mb-4">Detalles de la Propiedad</h2>
+					<ul class="space-y-2">
+						<li><strong>Dirección:</strong> { propiedad.CalleNumero }, { propiedad.Comuna }, { propiedad.Ciudad }</li>
+						<li><strong>Metros Cuadrados:</strong> { fmt.Sprintf("%d m²", propiedad.MetrosCuadrados) }</li>
+						<li><strong>Dormitorios:</strong> { fmt.Sprintf("%d", propiedad.Dormitorios) }</li>
+						<li><strong>Baños:</strong> { fmt.Sprintf("%d", propiedad.Banios) }</li>
+						<li><strong>Gastos Comunes:</strong> ${ fmt.Sprintf("%d", propiedad.GastosComunes) }</li>
+					</ul>
+				</div>
+				<div>
+					<h2 class="text-2xl font-semibold text-red-800 mb-4">Precios</h2>
+					if propiedad.Venta {
+						<p class="text-xl mb-2"><strong>Precio Venta:</strong> ${ fmt.Sprintf("%d", propiedad.PrecioVenta) }</p>
+					}
+					if propiedad.Arriendo {
+						<p class="text-xl mb-2"><strong>Precio Arriendo:</strong> ${ fmt.Sprintf("%d", propiedad.PrecioArriendo) }/mes</p>
+					}
+					<p class="text-sm text-gray-600 mt-4">Publicado el { propiedad.TimeCreated.Format("02/01/2006") }</p>
+				</div>
+			</div>
+			<div class="mb-8">
+				<h2 class="text-2xl font-semibold text-red-800 mb-4">Descripción</h2>
+				<p class="text-gray-700">{ propiedad.Descripcion }</p>
+			</div>
+			if len(propiedad.FotosLinks) > 1 {
+				<div>
+					<h2 class="text-2xl font-semibold text-red-800 mb-4">Galería de Fotos</h2>
+					<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						for _, foto := range propiedad.FotosLinks[1:] {
+							<img src={ foto } alt="Foto de la propiedad" class="w-full h-48 object-cover rounded-lg shadow-sm"/>
+						}
+					</div>
+				</div>
+			}
+			<div class="mt-8">
+				<a href="/propiedades" class="inline-block text-white px-6 py-2 rounded-lg bg-red-900 hover:bg-red-800 transition duration-300">
+					Volver a la lista de propiedades
+				</a>
+			</div>
+		</div>
+	}
+}

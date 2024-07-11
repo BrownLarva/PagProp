@@ -1,0 +1,108 @@
+package uploadPropiedad
+
+import (
+	"PagProp/views/layouts"
+)
+
+templ UploadForm() {
+	@layouts.Base() {
+		<div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+			<h1 class="text-3xl font-bold mb-6 text-center text-red-900">Subir Propiedad</h1>
+			<form action="/uploadPropiedad" method="POST" class="space-y-6">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						<label for="comuna" class="block text-sm font-medium text-gray-700">Comuna:</label>
+						<input type="text" id="comuna" name="comuna" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="ciudad" class="block text-sm font-medium text-gray-700">Ciudad:</label>
+						<input type="text" id="ciudad" name="ciudad" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="calle_numero" class="block text-sm font-medium text-gray-700">Calle y Número:</label>
+						<input type="text" id="calle_numero" name="calle_numero" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="categoria" class="block text-sm font-medium text-gray-700">Categoría:</label>
+						<select id="categoria" name="categoria" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+							<option value="Casa">Casa</option>
+							<option value="Departamento">Departamento</option>
+							<option value="Oficina">Oficina</option>
+							<option value="Bodega">Bodega</option>
+						</select>
+					</div>
+				</div>
+				<div class="flex space-x-4">
+					<div class="flex items-center">
+						<input type="checkbox" id="venta" name="venta" class="rounded text-red-600 focus:ring-red-500"/>
+						<label for="venta" class="ml-2 block text-sm text-gray-900">Venta</label>
+					</div>
+					<div class="flex items-center">
+						<input type="checkbox" id="arriendo" name="arriendo" class="rounded text-red-600 focus:ring-red-500"/>
+						<label for="arriendo" class="ml-2 block text-sm text-gray-900">Arriendo</label>
+					</div>
+				</div>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						<label for="precio_venta" class="block text-sm font-medium text-gray-700">Precio Venta:</label>
+						<input type="number" id="precio_venta" name="precio_venta" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="precio_arriendo" class="block text-sm font-medium text-gray-700">Precio Arriendo:</label>
+						<input type="number" id="precio_arriendo" name="precio_arriendo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+				</div>
+				<div>
+					<label for="num_fotos" class="block text-sm font-medium text-gray-700">Número de Fotos:</label>
+					<input type="number" id="num_fotos" name="num_fotos" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+				</div>
+				<div>
+					<label for="fotos_links" class="block text-sm font-medium text-gray-700">Links de Fotos:</label>
+					<div id="fotos_links_container" class="space-y-2">
+						<input type="url" name="fotos_links[]" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<button type="button" onclick="addFotoLink()" class="mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+						Añadir otro link de foto
+					</button>
+				</div>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+					<div>
+						<label for="metros_cuadrados" class="block text-sm font-medium text-gray-700">Metros Cuadrados:</label>
+						<input type="number" id="metros_cuadrados" name="metros_cuadrados" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="dormitorios" class="block text-sm font-medium text-gray-700">Dormitorios:</label>
+						<input type="number" id="dormitorios" name="dormitorios" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+					<div>
+						<label for="banios" class="block text-sm font-medium text-gray-700">Baños:</label>
+						<input type="number" id="banios" name="banios" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+					</div>
+				</div>
+				<div>
+					<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción:</label>
+					<textarea id="descripcion" name="descripcion" required rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"></textarea>
+				</div>
+				<div>
+					<label for="gastos_comunes" class="block text-sm font-medium text-gray-700">Gastos Comunes:</label>
+					<input type="number" id="gastos_comunes" name="gastos_comunes" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"/>
+				</div>
+				<div>
+					<button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+						Upload Property
+					</button>
+				</div>
+			</form>
+		</div>
+		<script>
+    function addFotoLink() {
+        const container = document.getElementById('fotos_links_container');
+        const input = document.createElement('input');
+        input.type = 'url';
+        input.name = 'fotos_links[]';
+        input.className = 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50';
+        container.appendChild(input);
+    }
+</script>
+	}
+}

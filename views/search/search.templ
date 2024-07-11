@@ -1,0 +1,90 @@
+package search
+
+import (
+	"PagProp/models"
+	"PagProp/views/layouts"
+	"PagProp/views/components"
+	"fmt"
+)
+
+templ SearchPage(comunas []string, maxPrice int, results []models.Propiedad) {
+	@layouts.Base() {
+		<div class="container mx-auto px-4 py-8">
+			@SearchSection(comunas, 0, maxPrice)
+			<div id="search-results" class="mt-8">
+				@SearchResults(results)
+			</div>
+		</div>
+	}
+}
+
+templ SearchSection(comunas []string, minPrice, maxPrice int) {
+	<div class="bg-red-50 p-6 rounded-lg shadow-md mb-8">
+		<h2 class="text-2xl font-semibold text-red-900 mb-4">Buscar Propiedades</h2>
+		<form hx-get="/search" hx-trigger="change delay:500ms, search" hx-target="#search-results" hx-indicator=".htmx-indicator">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+				<div>
+					<label for="comuna" class="block text-sm font-medium text-red-700">Comuna</label>
+					<select id="comuna" name="comuna" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+						<option value="">Todas las comunas</option>
+						for _, comuna := range comunas {
+							<option value={ comuna }>{ comuna }</option>
+						}
+					</select>
+				</div>
+				<div>
+					<label for="categoria" class="block text-sm font-medium text-red-700">Categoría</label>
+					<select id="categoria" name="categoria" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+						<option value="">Todas las categorías</option>
+						<option value="Casa">Casa</option>
+						<option value="Departamento">Departamento</option>
+						<option value="Oficina">Oficina</option>
+						<option value="Bodega">Bodega</option>
+					</select>
+				</div>
+				<div>
+					<label for="min_price" class="block text-sm font-medium text-red-700">Precio Mínimo</label>
+					<input
+						type="number"
+						id="min_price"
+						name="min_price"
+						min="0"
+						max={ fmt.Sprintf("%d", maxPrice) }
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
+						placeholder="Precio mínimo"
+					/>
+				</div>
+				<div>
+					<label for="max_price" class="block text-sm font-medium text-red-700">Precio Máximo</label>
+					<input
+						type="number"
+						id="max_price"
+						name="max_price"
+						min="0"
+						max={ fmt.Sprintf("%d", maxPrice) }
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
+						placeholder="Precio máximo"
+					/>
+				</div>
+			</div>
+			<div class="mt-4 flex justify-end">
+				<button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+					Buscar
+				</button>
+			</div>
+		</form>
+	</div>
+	<div class="htmx-indicator fixed top-0 left-0 w-full h-1 bg-red-600 opacity-0 transition-opacity duration-300"></div>
+}
+
+templ SearchResults(propiedades []models.Propiedad) {
+	if len(propiedades) == 0 {
+		<p class="text-center text-gray-600">No se encontraron propiedades que coincidan con tu búsqueda.</p>
+	} else {
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			for _, propiedad := range propiedades {
+				@components.PropiedadCard(&propiedad)
+			}
+		</div>
+	}
+}
